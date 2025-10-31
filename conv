@@ -1,0 +1,26 @@
+clc;
+clear all;
+
+
+data = [1 0 1 1];  
+K = 3;  
+
+g0 = [1 1 1];   % 7 in octal
+g1 = [1 0 1];   % 5 in octal
+
+reg = zeros(1, K);
+
+encoded = [];  % To store encoded output
+
+for i = 1:length(data)
+    reg = [data(i) reg(1:end-1)];  % Shift current bit in
+
+    % Compute outputs using XOR of tapped bits
+    out0 = mod(sum(g0 .* reg), 2);  
+    out1 = mod(sum(g1 .* reg), 2);
+
+    encoded = [encoded out0 out1];  % Append output bits
+end
+
+disp('Encoded Output:');
+disp(encoded);
