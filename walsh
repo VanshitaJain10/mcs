@@ -1,0 +1,21 @@
+clc; clear all;
+
+% Number of users (must be power of 2)
+N = 4;
+
+% Generate Hadamard matrix
+H = 1;
+
+while size(H,1) < N
+    H = [H H; H -H];
+end
+
+disp('Hadamard Matrix:');
+disp(H);
+
+% Each row is a Walsh code
+disp('Walsh Codes for users:');
+for i = 1:N
+    fprintf('User %d: ', i);
+    disp(H(i,:));
+end
