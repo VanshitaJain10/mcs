@@ -1,0 +1,35 @@
+clc; clear all;
+
+% User data bits (1 = +1, 0 = -1)
+user1_data = [1 0 1];  
+user2_data = [0 1 1];
+
+% Map 0 → -1
+user1_data(user1_data==0) = -1;
+user2_data(user2_data==0) = -1;
+
+pn1 = [1 -1 1 -1];  % User1
+pn2 = [1 1 -1 -1];  % User2
+
+spread1 = [];
+spread2 = [];
+
+for i = 1:length(user1_data)
+    spread1 = [spread1 user1_data(i) * pn1];
+    spread2 = [spread2 user2_data(i) * pn2];
+end
+
+% Transmitted signal = sum of all users
+tx_signal = spread1 + spread2;
+
+disp('Transmitted CDMA Signal:');
+disp(tx_signal);
+
+% Receiver: Despread for user1
+rx_user1 = tx_signal .* repmat(pn1, 1, length(user1_data));
+rx_data_user1 = sum(reshape(rx_user1, length(pn1), length(user1_data)), 1);
+rx_data_user1(rx_data_user1>0) = 1;
+rx_data_user1(rx_data_user1<=0) = 0;
+
+disp('Received Data for User 1:');
+disp(rx_data_user1);
