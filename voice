@@ -1,0 +1,38 @@
+clc; clear all; close all;
+
+% Parameters
+N = [3 4 7 12];          % Cluster sizes
+n = 4;                   % Path loss exponent
+i0 = 6;                  % Number of first-tier co-channel interferers
+
+C_I_linear = zeros(size(N));
+C_I_dB = zeros(size(N));
+voice_quality = strings(size(N));
+
+% Calculate C/I for each cluster size
+for k = 1:length(N)
+    D_R = sqrt(3*N(k));                  
+    C_I_linear(k) = (D_R)^n / i0;        
+    C_I_dB(k) = 10*log10(C_I_linear(k));
+
+    % Map C/I to voice quality
+    if C_I_dB(k) < 12
+        voice_quality(k) = "Poor";
+    elseif C_I_dB(k) >= 12 && C_I_dB(k) < 18
+        voice_quality(k) = "Tolerable";
+    else
+        voice_quality(k) = "Clear";
+    end
+end
+
+% Display results
+disp('Cluster Size N    C/I (linear)    C/I (dB)    Voice Quality');
+disp([N' C_I_linear' C_I_dB' voice_quality']);
+
+% Plot
+figure;
+plot(N, C_I_dB, '-o','LineWidth',2);
+xlabel('Cluster Size N');
+ylabel('C/I Ratio (dB)');
+title('C/I Ratio vs Cluster Size (Voice Quality)');
+grid on;
