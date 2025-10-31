@@ -1,0 +1,35 @@
+% PN Sequence Generator using LFSR
+clc;
+clear all;
+close all;
+
+% Number of stages
+n = 3;
+
+% Feedback taps (for maximal length sequence)
+% For n=3, one maximal tap combination is [3,2]
+taps = [3 2];
+
+% Initial seed (cannot be all zeros)
+reg = [1 0 0]; 
+
+% Sequence length
+seq_len = (2^n) - 1;
+
+pn_seq = zeros(1, seq_len);
+
+for i = 1:seq_len
+    pn_seq(i) = reg(end); % Output bit (rightmost bit)
+    
+    % XOR of tap bits to get feedback
+    feedback = 0;
+    for t = 1:length(taps)
+        feedback = xor(feedback, reg(n - taps(t) + 1));
+    end
+    
+    % Shift bits right and insert feedback at left
+    reg = [feedback reg(1:end-1)];
+end
+
+disp('Generated PN Sequence: ');
+disp(pn_seq);
